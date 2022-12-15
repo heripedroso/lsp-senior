@@ -81,9 +81,9 @@ Se(( nNumCra = 0) e (x2TNumCad <> 0)){
     BusCraTit(xNumEmp,xTipCol,x2TNumCad,DatPro,n2TNumCra);    
     
     @ Retorna Marcações originais na data de processamento @
-    Se(nEhHorarioNoturno = 0){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, n2TNumCra, DatPro, DatPro); }
-    Se(nEhHorarioNoturno = 1){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, n2TNumCra, DatPro, DatPro + 1); }
-    Se(nEhHorario24h = 1){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, n2TNumCra, DatPro, DatPro + 1); }
+    Se(nEhHorarioNoturno = 0){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, x2TNumCad, DatPro, DatPro); }
+    Se(nEhHorarioNoturno = 1){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, x2TNumCad, DatPro, DatPro + 1); }
+    Se(nEhHorario24h = 1){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, x2TNumCad, DatPro, DatPro + 1); }
    
     nContador = 1;
     Enquanto (DatAccOri[nContador] <> 0)
