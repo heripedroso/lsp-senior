@@ -9,7 +9,7 @@ Há 03 tipos de horários em um hospital:
 
 ## Problemática 01
 
-Os cálculos nativos do sistemas (apuração de atrasos e saídas antecipadas) são úteis apenas para os horários diurnos. Já para os horários noturnos e de 24h (quando há a passagem de dias), o sistema calcula de forma diferente, o que não é interessante para o contexto em que trabalho. Dessa forma, optei por desconsiderar o cálculo nativo e utilizar um algoritmo simples para calcular os atrasos, saídas antecipadas e horas trabalhadas.
+Os cálculos nativos do sistemas (apuração de atrasos e saídas antecipadas) são úteis apenas para os horários diurnos. Já para os horários noturnos e de 24h (quando há a passagem de dias), o sistema calcula de forma diferente, o que não é interessante para o contexto em que trabalho. Dessa forma, optei por desconsiderar o cálculo nativo e utilizei um algoritmo simples para calcular os atrasos, saídas antecipadas e horas trabalhadas.
 
 ## Problemática 02
 
