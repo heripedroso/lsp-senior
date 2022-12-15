@@ -2,15 +2,15 @@
 
 @ Desenvolvido por Heriberto Pedroso @
 @ Em 15/12/2022 @
-@ Regra principal - c·lculo de atrasos, saÌdas antecipadas, compensaÁ„o, etc. @
+@ Regra principal - c√°lculo de atrasos, sa√≠das antecipadas, compensa√ß√£o, etc. @
 
-@ --- Vari·veis globais (Contadores) --- @
+@ --- Vari√°veis globais (Contadores) --- @
 @ gContadorAtrasos @
-@ gContadorSaÌdasAntecipadas @
+@ gContadorSa√≠dasAntecipadas @
 @ gContadorFaltas @
 
 
-@ ----------------------- Vari·veis para filtro nos cursores -----------------------------@
+@ ----------------------- Vari√°veis para filtro nos cursores -----------------------------@
 xNumemp = R034FUN.NumEmp;                                                                     
 xTipCol = R034FUN.TipCol;
 xNumCad = R034FUN.NumCad;
@@ -18,42 +18,42 @@ Definir Data dDatRef;     dDatRef = DatPro;
 Definir Data dDatZER;     MontaData(31,12,1900,dDatZER);
 
 
-@ ----------------------- Retorna os hor·rio de entrada e saÌda -----------------------------@
-@ Retorna tambÈm as toler‚ncias antes e depois para a entrada/saÌda. @
-@ A funÁ„o RetornaBatidaHOrario È bastante ˙til, no entanto sÛ est· disponÌvel no mÛdulo de Controle de Ponto e RefeitÛrio. @
+@ ----------------------- Retorna os hor√°rio de entrada e sa√≠da -----------------------------@
+@ Retorna tamb√©m as toler√¢ncias antes e depois para a entrada/sa√≠da. @
+@ A fun√ß√£o RetornaBatidaHOrario √© bastante √∫til, no entanto s√≥ est√° dispon√≠vel no m√≥dulo de Controle de Ponto e Refeit√≥rio. @
 RetornaBatidaHorario (CodHog, 1, nUsoMar, nHorMar, nTolAnt2, nTolApo2, FaiMov);
 RetornaBatidaHorario (CodHog, 2, nUsoMar, nHorMar, nTolAnt2, nTolApo2, FaiMov);
 
 
-@ --------------------------- C·lculo da carga hor·ria di·ria  -------------------------- @
-@ --------------------------- Recupera valores de toler‚ncias  -------------------------- @
-@ ----------------------- De acordo com as configuraÁıes do horario  -------------------- @
+@ --------------------------- C√°lculo da carga hor√°ria di√°ria  -------------------------- @
+@ --------------------------- Recupera valores de toler√¢ncias  -------------------------- @
+@ ----------------------- De acordo com as configura√ß√µes do horario  -------------------- @
 @                                                                                         @ 
-@                   Hora entrada                            Hora saÌda                    @
+@                   Hora entrada                            Hora sa√≠da                    @
 @  Tempo > -----*---X----*------------------------------*---X----*------ >                @
-@               |         entrada toler‚ncia DEPOIS     |         saÌda toler‚ncia DEPOIS @
-@               entrada toler‚ncia ANTES                saÌda toler‚ncia ANTES            @
+@               |         entrada toler√¢ncia DEPOIS     |         sa√≠da toler√¢ncia DEPOIS @
+@               entrada toler√¢ncia ANTES                sa√≠da toler√¢ncia ANTES            @
 @                                                                                         @
 
 Definir Cursor cCargaHorariaDiaria;
-Definir Numero nCargaHorariaDiaria; nCargaHorariaDiaria = 0;    @ <---- Vari·vel principal @
-Definir Numero nMetadeCargaHorariaDiaria; nMetadeCargaHorariaDiaria = 0; @ <---- Vari·vel principal @
+Definir Numero nCargaHorariaDiaria; nCargaHorariaDiaria = 0;    @ <---- Vari√°vel principal @
+Definir Numero nMetadeCargaHorariaDiaria; nMetadeCargaHorariaDiaria = 0; @ <---- Vari√°vel principal @
 Definir Numero nCargaHorariaAlmoco; nCargaHorariaAlmoco = 0;
 Definir Numero nSequenciaMarcacao; nSequenciaMarcacao = 0; 
 
-nEhHorarioNoturno = 0; @ Vari·vel principal @
+nEhHorarioNoturno = 0; @ Vari√°vel principal @
 nHoraEntradaToleranciaAntes = 0;
 nHoraSaidaToleranciaAnterior = 0;
 nHoraSaidaToleranciaApos = 0;
-nToleranciaSaidaAntecipada = 0; @ Vari·vel principal @
-nToleranciaAtraso = 0; @ Vari·vel principal @
+nToleranciaSaidaAntecipada = 0; @ Vari√°vel principal @
+nToleranciaAtraso = 0; @ Vari√°vel principal @
 
-nHoraEntrada = 0; @ vari·veis de apoio @
-nHoraSaida = 0; @ vari·veis de apoio @
-nPrimeiraBatida = 0; @ vari·veis de apoio @
-nSegundaBatida = 0; @ vari·veis de apoio @
-nTerceiraBatida = 0; @ vari·veis de apoio @
-nQuartaBatida = 0; @ vari·veis de apoio @
+nHoraEntrada = 0; @ vari√°veis de apoio @
+nHoraSaida = 0; @ vari√°veis de apoio @
+nPrimeiraBatida = 0; @ vari√°veis de apoio @
+nSegundaBatida = 0; @ vari√°veis de apoio @
+nTerceiraBatida = 0; @ vari√°veis de apoio @
+nQuartaBatida = 0; @ vari√°veis de apoio @
 
 Definir Numero nCodHorario; nCodHorario = CodHog;
 
@@ -89,26 +89,25 @@ Enquanto (cCargaHorariaDiaria.achou){
 }    
 cCargaHorariaDiaria.fecharCursor();  
 
-@ Se o hor·rio possue 04 batidas @
 Se(CodHog < 996)
 inicio
-    Se(nQuartaBatida <> 0)
+    Se(nQuartaBatida <> 0) @ Se o hor√°rio possue 04 batidas @
     inicio
         nCargaHorariaAlmoco = nTerceiraBatida - nSegundaBatida;
         nCargaHorariaDiaria = nQuartaBatida - nPrimeiraBatida - nCargaHorariaAlmoco;     
     fim;
-    Senao @ Se o hor·rio possue 02 batidas, ent„o n„o tem almoÁo e apenas pega a diferenÁa da hora da saÌda e da entrada para ter a carga horario total. @ 
+    Senao @ Se o hor√°rio possue 02 batidas, ent√£o n√£o tem almo√ßo e apenas pega a diferen√ßa da hora da sa√≠da e da entrada para ter a carga horario total. @ 
     inicio
         nCargaHorariaDiaria = nSegundaBatida - nPrimeiraBatida;
         Se((nPrimeiraBatida > nSegundaBatida)) {
            nEhHorarioNoturno = 1;
         }
-        Se(nPrimeiraBatida = nSegundaBatida) {   @ ATEN«√O -> O SÍnior n„o trata os hor·rios de 24 horas. @
+        Se(nPrimeiraBatida = nSegundaBatida) {   @ ATEN√á√ÉO -> O S√™nior n√£o trata os hor√°rios de 24 horas. @
            nEhHorario24h = 1;
            nCargaHorariaDiaria = 24*60;
-           nEhHorarioNoturno = 2; @ Seta um valor inv·lido. @       
+           nEhHorarioNoturno = 2; @ Seta um valor inv√°lido. @       
         }
-        Se(nEhHorarioNoturno = 1){ @ Hor·rio noturno. Por exemplo: 19:00 - 07:00. @
+        Se(nEhHorarioNoturno = 1){ @ Hor√°rio noturno. Por exemplo: 19:00 - 07:00. @
             nCargaHorariaDiaria = (24*60 - nPrimeiraBatida) + nSegundaBatida;
         }
     fim;  
@@ -118,23 +117,23 @@ nMetadeCargaHorariaDiaria = nCargaHorariaDiaria/2;
 
 
 
-@ -------------- Faz um prÈ tratamento dos hor·rios. -------------- @
-@ … necess·rio saber se a batida È de entrada ou saÌda. Para isto, @       
-@ devemos encontrar qual horas corresponde ‡ metade da carga hor·ria di·ria. @
-@ Para os hor·rios noturnos e de 24h, a metada È definida pelo 1∫ e 2∫ dia.@
+@ -------------- Faz um pr√© tratamento dos hor√°rios. -------------- @
+@ √â necess√°rio saber se a batida √© de entrada ou sa√≠da. Para isto, @       
+@ devemos encontrar qual horas corresponde √† metade da carga hor√°ria di√°ria. @
+@ Para os hor√°rios noturnos e de 24h, a metada √© definida pelo 1¬∫ e 2¬∫ dia.@
 
-nHoraMetadeDoPeriodo = nHoraEntrada + ((nHoraSaida-nHoraEntrada)/2);  @ Para ajudar na definiÁ„o se a batida È na primeira metade ou na segunda metade do hor·rio. @
+nHoraMetadeDoPeriodo = nHoraEntrada + ((nHoraSaida-nHoraEntrada)/2);  @ Para ajudar na defini√ß√£o se a batida √© na primeira metade ou na segunda metade do hor√°rio. @
         
-Se(nEhHorarioNoturno = 1){ @ Hor·rio noturno. Por exemplo: 19:00 - 07:00. @
-    nHoraMetadeDoPeriodo = 0; @ Para fins de c·lculo, a metade do perÌodo È ‡ meia noite. @             
+Se(nEhHorarioNoturno = 1){ @ Hor√°rio noturno. Por exemplo: 19:00 - 07:00. @
+    nHoraMetadeDoPeriodo = 0; @ Para fins de c√°lculo, a metade do per√≠odo √© √† meia noite. @             
 }
         
-Se(nEhHorario24h = 1){ @ Hor·rio de 24 horas. @
-    Se((CodHog < 996) e (HorDSe > 995)){ nHorarioDiaSeguinte = HorDSe;} @ O prÛximo dia, mesmo sendo FOLGA/FERIADO/DSR, ainda deve fazer parte dos c·lculos. @
+Se(nEhHorario24h = 1){ @ Hor√°rio de 24 horas. @
+    Se((CodHog < 996) e (HorDSe > 995)){ nHorarioDiaSeguinte = HorDSe;} @ O pr√≥ximo dia, mesmo sendo FOLGA/FERIADO/DSR, ainda deve fazer parte dos c√°lculos. @
 }
     
-@ Trata os hor·rios de 24 horas. Devemos saber se estamos apurando o 1∫ dia ou o 2∫ dia. @    
-@ O SÍnior n„o consegue tratar hor·rios de 24 horas, logo devemos saber se estamos no primeiro ou no segundo dia da apuraÁ„o. @    
+@ Trata os hor√°rios de 24 horas. Devemos saber se estamos apurando o 1¬∫ dia ou o 2¬∫ dia. @    
+@ O S√™nior n√£o consegue tratar hor√°rios de 24 horas, logo devemos saber se estamos no primeiro ou no segundo dia da apura√ß√£o. @    
 nPrimeiroDiaHorario24h = 0;
 Se((nEhHorario24h = 1) e (CodHog < 996)){
     nPrimeiroDiaHorario24h = 1;   
@@ -145,5 +144,5 @@ Se((CodHog > 995) e (CodHog = nHorarioDiaSeguinte)){
     nHorarioDiaSeguinte = 0;
     nSegundoDiaHorario24h = 1;
     nCargaHorariaDiaria = 24*60;
-    nEhHorarioNoturno = 2; @ Seta um valor inv·lido. @      
+    nEhHorarioNoturno = 2; @ Seta um valor inv√°lido. @      
 }
