@@ -28,9 +28,8 @@ Para o cálculos de carga horária não encontrei função nativa com esse retor
 A partir da Entrada e suas tolerâncias, da Saída e suas tolerâncias e da Metade do período de trabalho, podemos calcular os valores necessários para a apuração dos atrasos e saídas antecipadas.
 
 ```
-@ ---------------------------------------- Cálculo da carga horária diária  -------------------------------- @
-@ ---------------------------------------- Recupera valores de tolerâncias  -------------------------------- @
-@ ------------------------------------ De acordo com as configurações do horario  -------------------------- @
+
+@ ---------------------------------------------- Linha do tempo  ------------------------------------------- @
 @                                                                                                            @ 
 @                                                                                                            @ 
 @                   Hora entrada                     METADE                    Hora saída                    @
