@@ -1,4 +1,4 @@
-@ -------------- Percorre as marcações do dia para verificar se houveram marcações ausentes ou fora da tolerância. -------------- @                
+@ -------------- Percorre as marcaÃ§Ãµes do dia para verificar se houveram marcaÃ§Ãµes ausentes ou fora da tolerÃ¢ncia. -------------- @                
 nPrimeiraMarcacaoEntradaValida = 0;   
 nUltimaMarcacaoSaidaValida = 0;
 nMarcacaoCompensacao = 0;                
@@ -10,16 +10,16 @@ Enquanto(HorApg[nContador] <> 0){
  
             Se(nEhHorarioNoturno = 0){
                                        
-                 @ Verifica se as marcações estão dentro da tolerância @
+                 @ Verifica se as marcaÃ§Ãµes estÃ£o dentro da tolerÃ¢ncia @
                  Se((HorApg[nContador] >= nHoraEntradaToleranciaAntes) e (HorApg[nContador] <= nHoraMetadeDoPeriodo)){  
                        Se(nPrimeiraMarcacaoEntradaValida = 0){
-                           nPrimeiraMarcacaoEntradaValida = HorApg[nContador]; @ Dá-se preferência para a marcação que não causa desconto. @
+                           nPrimeiraMarcacaoEntradaValida = HorApg[nContador]; @ DÃ¡-se preferÃªncia para a marcaÃ§Ã£o que nÃ£o causa desconto. @
                        }                   
                  }                 
                  Se((HorApg[nContador] > nHoraMetadeDoPeriodo) e (HorApg[nContador] <= nHoraSaidaToleranciaApos)){
                        nUltimaMarcacaoSaidaValida = HorApg[nContador];
                  } 
-                 @ Verifica se houver minutos para compensação @                    
+                 @ Verifica se houver minutos para compensaÃ§Ã£o @                    
                  Se((HorApg[nContador] > nHoraSaida) e (HorApg[nContador] <= nHoraSaidaToleranciaApos)){
                        nMarcacaoCompensacao = HorApg[nContador];
                  }  
@@ -27,28 +27,28 @@ Enquanto(HorApg[nContador] <> 0){
  
             Se(nEhHorarioNoturno = 1){                     
                                        
-                  @ Verifica se as marcações estão dentro da tolerância @
+                  @ Verifica se as marcaÃ§Ãµes estÃ£o dentro da tolerÃ¢ncia @
                   Se((DatApg[nContador] = DatPro) e (HorApg[nContador] >= nHoraEntradaToleranciaAntes)){
                       Se(nPrimeiraMarcacaoEntradaValida = 0){
-                          nPrimeiraMarcacaoEntradaValida = HorApg[nContador]; @ Dá-se preferência para a marcação que não causa desconto. @
+                          nPrimeiraMarcacaoEntradaValida = HorApg[nContador]; @ DÃ¡-se preferÃªncia para a marcaÃ§Ã£o que nÃ£o causa desconto. @
                       }                                           
                   }                   
-                  @ Verifica se a marcação do dia seguintes está dentro da tolerância. @                
+                  @ Verifica se a marcaÃ§Ã£o do dia seguintes estÃ¡ dentro da tolerÃ¢ncia. @                
                   Se((DatApg[nContador] = (DatPro + 1)) e (HorApg[nContador] <= nHoraSaidaToleranciaApos)){
                       nUltimaMarcacaoSaidaValida = HorApg[nContador];
                   }
                   
-                  @ Verifica se há marcação que possa compensar algum atraso. @                    
+                  @ Verifica se hÃ¡ marcaÃ§Ã£o que possa compensar algum atraso. @                    
                   Se((DatApg[nContador] = (DatPro + 1)) e (HorApg[nContador] > nHoraSaida) e (HorApg[nContador] <= nHoraSaidaToleranciaApos)){
                         nMarcacaoCompensacao = HorApg[nContador];
                   }                                                                                          
              }
              
              Se((nPrimeiroDiaHorario24h = 1) e (DatApg[nContador] = DatPro)){                  
-                 @ Verifica se as marcações estão dentro da tolerância @
-                 Se((HorApg[nContador] >= nHoraEntradaToleranciaAntes) e (HorApg[nContador] <= 24*60)){ @A primeira metada vai até meia noite. @  
+                 @ Verifica se as marcaÃ§Ãµes estÃ£o dentro da tolerÃ¢ncia @
+                 Se((HorApg[nContador] >= nHoraEntradaToleranciaAntes) e (HorApg[nContador] <= 24*60)){ @A primeira metada vai atÃ© meia noite. @  
                        Se(nPrimeiraMarcacaoEntradaValida24h = 0){
-                           nPrimeiraMarcacaoEntradaValida24h = HorApg[nContador]; @ Dá-se preferência para a marcação que não causa desconto. @
+                           nPrimeiraMarcacaoEntradaValida24h = HorApg[nContador]; @ DÃ¡-se preferÃªncia para a marcaÃ§Ã£o que nÃ£o causa desconto. @
                        }                   
                  }               
              } 
@@ -62,7 +62,7 @@ Enquanto(HorApg[nContador] <> 0){
                  Se(HorApg[nContador] <= nHoraSaidaToleranciaApos){
                        nUltimaMarcacaoSaidaValida24h = HorApg[nContador];
                  } 
-                 @ Verifica se há minutos para compensar. @                    
+                 @ Verifica se hÃ¡ minutos para compensar. @                    
                  Se((HorApg[nContador] > nHoraSaida) e (HorApg[nContador] <= nHoraSaidaToleranciaApos)){
                        nMarcacaoCompensacao = HorApg[nContador];
                  }               
@@ -72,18 +72,18 @@ Enquanto(HorApg[nContador] <> 0){
              nContador++;
 }   
 
-@ ------------------------------------------ Verifica 2º teto ------------------------------------------ @
-@ x2TNumCad é calculado anteriormente em seções anteriores. @ 
+@ ------------------------------------------ Verifica 2Âº teto ------------------------------------------ @
+@ x2TNumCad Ã© calculado anteriormente em seÃ§Ãµes anteriores. @ 
 @ RetornaMarcacoesOriginais(R034FUN.NumEmp, R034FUN.TipCol, R034FUN.NumCad, DatPro, DatPro); @
 @ Tipo de Retorno: DatApuOri[], NumCraOri[], DatAccOri[], HorAccOri[], SeqAccOri[], CodPltOri[], CodRlgOri[]. @    
 BusCraTit(xNumEmp,xTipCol,xNumCad,DatPro,nNumCra);
 Se(( nNumCra = 0) e (x2TNumCad <> 0)){
     BusCraTit(xNumEmp,xTipCol,x2TNumCad,DatPro,n2TNumCra);    
     
-    @ Retorna Marcações originais na data de processamento @
-    Se(nEhHorarioNoturno = 0){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, x2TNumCad, DatPro, DatPro); }
-    Se(nEhHorarioNoturno = 1){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, x2TNumCad, DatPro, DatPro + 1); }
-    Se(nEhHorario24h = 1){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, x2TNumCad, DatPro, DatPro + 1); }
+    @ Retorna MarcaÃ§Ãµes originais na data de processamento @
+    Se(nEhHorarioNoturno = 0){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, n2TNumCra, DatPro, DatPro); }
+    Se(nEhHorarioNoturno = 1){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, n2TNumCra, DatPro, DatPro + 1); }
+    Se(nEhHorario24h = 1){ RetornaMarcacoesOriginais(xNumEmp, xTipCol, n2TNumCra, DatPro, DatPro + 1); }
    
     nContador = 1;
     Enquanto (DatAccOri[nContador] <> 0)
@@ -95,16 +95,16 @@ Se(( nNumCra = 0) e (x2TNumCad <> 0)){
         @ xMarcacoes = xMarcacoes + " " + AlfHorAcc; @
             Se(nEhHorarioNoturno = 0){
                                        
-                 @ Verifica se as marcações estão dentro da tolerância @
+                 @ Verifica se as marcaÃ§Ãµes estÃ£o dentro da tolerÃ¢ncia @
                  Se((HorAccOri [nContador] >= nHoraEntradaToleranciaAntes) e (HorAccOri [nContador] <= nHoraMetadeDoPeriodo)){  
                        Se(nPrimeiraMarcacaoEntradaValida = 0){
-                           nPrimeiraMarcacaoEntradaValida = HorAccOri [nContador]; @ Dá-se preferência para a marcação que não causa desconto. @
+                           nPrimeiraMarcacaoEntradaValida = HorAccOri [nContador]; @ DÃ¡-se preferÃªncia para a marcaÃ§Ã£o que nÃ£o causa desconto. @
                        }                   
                  }                 
                  Se((HorAccOri [nContador] > nHoraMetadeDoPeriodo) e (HorAccOri [nContador] <= nHoraSaidaToleranciaApos)){
                        nUltimaMarcacaoSaidaValida = HorAccOri [nContador];
                  } 
-                 @ Verifica se houver minutos para compensação @                    
+                 @ Verifica se houver minutos para compensaÃ§Ã£o @                    
                  Se((HorAccOri [nContador] > nHoraSaida) e (HorAccOri [nContador] <= nHoraSaidaToleranciaApos)){
                        nMarcacaoCompensacao = HorAccOri[nContador];
                  }  
@@ -112,28 +112,28 @@ Se(( nNumCra = 0) e (x2TNumCad <> 0)){
             
             Se(nEhHorarioNoturno = 1){                     
                                        
-                  @ Verifica se as marcações estão dentro da tolerância @
+                  @ Verifica se as marcaÃ§Ãµes estÃ£o dentro da tolerÃ¢ncia @
                   Se((DatAccOri[nContador] = DatPro) e (HorAccOri[nContador] >= nHoraEntradaToleranciaAntes)){
                       Se(nPrimeiraMarcacaoEntradaValida = 0){
-                          nPrimeiraMarcacaoEntradaValida = HorAccOri[nContador]; @ Dá-se preferência para a marcação que não causa desconto. @
+                          nPrimeiraMarcacaoEntradaValida = HorAccOri[nContador]; @ DÃ¡-se preferÃªncia para a marcaÃ§Ã£o que nÃ£o causa desconto. @
                       }                                           
                   }                   
-                  @ Verifica se a marcação do dia seguintes está dentro da tolerância. @                
+                  @ Verifica se a marcaÃ§Ã£o do dia seguintes estÃ¡ dentro da tolerÃ¢ncia. @                
                   Se((DatAccOri[nContador] = (DatPro + 1)) e (HorAccOri[nContador] <= nHoraSaidaToleranciaApos)){
                       nUltimaMarcacaoSaidaValida = HorAccOri[nContador];
                   }
                   
-                  @ Verifica se há marcação que possa compensar algum atraso. @                    
+                  @ Verifica se hÃ¡ marcaÃ§Ã£o que possa compensar algum atraso. @                    
                   Se((DatAccOri[nContador] = (DatPro + 1)) e (HorAccOri[nContador] > nHoraSaida) e (HorAccOri[nContador] <= nHoraSaidaToleranciaApos)){
                         nMarcacaoCompensacao = HorAccOri[nContador];
                   }                                                                                          
              }                  
         
              Se((nPrimeiroDiaHorario24h = 1) e (DatAccOri[nContador] = DatPro)){                  
-                 @ Verifica se as marcações estão dentro da tolerância @
-                 Se((HorAccOri[nContador] >= nHoraEntradaToleranciaAntes) e (HorAccOri[nContador] <= 24*60)){ @A primeira metada vai até meia noite. @  
+                 @ Verifica se as marcaÃ§Ãµes estÃ£o dentro da tolerÃ¢ncia @
+                 Se((HorAccOri[nContador] >= nHoraEntradaToleranciaAntes) e (HorAccOri[nContador] <= 24*60)){ @A primeira metada vai atÃ© meia noite. @  
                        Se(nPrimeiraMarcacaoEntradaValida24h = 0){
-                           nPrimeiraMarcacaoEntradaValida24h = HorAccOri[nContador]; @ Dá-se preferência para a marcação que não causa desconto. @
+                           nPrimeiraMarcacaoEntradaValida24h = HorAccOri[nContador]; @ DÃ¡-se preferÃªncia para a marcaÃ§Ã£o que nÃ£o causa desconto. @
                        }                   
                  }               
              } 
@@ -147,7 +147,7 @@ Se(( nNumCra = 0) e (x2TNumCad <> 0)){
                  Se(HorAccOri[nContador] <= nHoraSaidaToleranciaApos){
                        nUltimaMarcacaoSaidaValida24h = HorAccOri[nContador];
                  } 
-                 @ Verifica se há minutos para compensar. @                    
+                 @ Verifica se hÃ¡ minutos para compensar. @                    
                  Se((HorAccOri[nContador] > nHoraSaida) e (HorAccOri[nContador] <= nHoraSaidaToleranciaApos)){
                        nMarcacaoCompensacao = HorAccOri[nContador];
                  }               
@@ -163,7 +163,7 @@ Se(( nNumCra = 0) e (x2TNumCad <> 0)){
 @ ------------------------------------------ Calcula FALTAS ------------------------------------------ @
 Definir Numero nHouveFalta; nHouveFalta = 0;
 
-@ Faltas contam somente nos dias úteis (CodHog < 996). @
+@ Faltas contam somente nos dias Ãºteis (CodHog < 996). @
 Se( ((nEhHorarioNoturno = 0) ou (nEhHorarioNoturno = 1)) e (nPrimeiraMarcacaoEntradaValida = 0) e (nUltimaMarcacaoSaidaValida = 0) e (CodHog < 996)){
     gContadorFaltas++;
     nHouveFalta = 1;
