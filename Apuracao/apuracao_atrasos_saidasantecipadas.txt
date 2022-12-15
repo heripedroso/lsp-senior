@@ -1,0 +1,184 @@
+@ -------------------------------- IMPORTANTE AQUI.------------------------------------------------- @
+@ -------------------------------- Inicia cálculo. ------------------------------------------------- @
+Se( nDeveCalcular = 1){  
+                
+         @ -------------------- SITUAÇÕES CALCULADAS - Procura por situações calculadas pelo sistema (atrasos, saídas antecipadas, etc) -------------------- @
+
+         @nHorasTrabalhadasNoDia = HorStg[1];@ 
+         @nHorasAtrasoNoDia = HorStg[103];  Sênior calcula errado. @
+         @nHorasSaidaAntecipadaNoDia = HorStg[101];  Sênior calcula errado. @  
+         @nHouveMarcacaoInvalida = HorStg[999];@ 
+         @nHorasFalta = HorStg[15];@ @ Sênior calcula as faltas em minutos. Não serve para o nosso caso. @                                    
+          
+         Se((nEhHorarioNoturno = 0) ou (nEhHorarioNoturno = 1)){
+        
+             @ Cálculo do atraso. @
+             Se((nPrimeiraMarcacaoEntradaValida <> 0) e (nPrimeiraMarcacaoEntradaValida > (nHoraEntrada + nToleranciaAtraso))){ 
+                nHorasAtrasoNoDia =  nPrimeiraMarcacaoEntradaValida - nHoraEntrada;                                   
+             }  
+             
+             @ Cálculo da saída antecipada. @
+             Se((nUltimaMarcacaoSaidaValida <> 0) e (nUltimaMarcacaoSaidaValida < (nHoraSaida - nToleranciaSaidaAntecipada))){                         
+                 nHorasSaidaAntecipadaNoDia =  nHoraSaida - nUltimaMarcacaoSaidaValida;                     
+             }                                                                                                                                
+            
+        
+            Se(nHorasAtrasoNoDia > 0){
+                gContadorAtrasos++;
+                nContadorAtrasosFoiIncrementado = 1;
+            }
+        
+            Se(nHorasSaidaAntecipadaNoDia > 0){
+                gContadorSaidasAntecipadas++;
+                nContadorSaidasFoiIncrementado = 1;
+            }                                                          
+        
+            @ Trata a entrada sem registro. @
+            Se((nPrimeiraMarcacaoEntradaValida = 0) e (nEntradaJustificada = 0)) {
+                nHorasAtrasoNoDia = nCargaHorariaDiaria/2;  
+                Se(nContadorAtrasosFoiIncrementado = 0){
+                   gContadorAtrasos++;
+                   nContadorAtrasosFoiIncrementado = 1;
+                }         
+            }
+
+            @ Trata a entrada sem registro. @
+            Se((nUltimaMarcacaoSaidaValida = 0)  e (nSaidaJustificada = 0)){
+                nHorasSaidaAntecipadaNoDia = nCargaHorariaDiaria/2;
+                Se(nContadorSaidasFoiIncrementado = 0){
+                   gContadorSaidasAntecipadas++;
+                   nContadorSaidasFoiIncrementado = 1;
+                }            
+            }        
+                        
+            Se(nEntradaJustificada > 0){
+                 Se(nContadorAtrasosFoiIncrementado = 1){
+                   gContadorAtrasos--;            
+                 }
+                 nHorasAtrasoNoDia = 0;                 
+            }           
+        
+            Se(nSaidaJustificada > 0){
+                 Se(nContadorSaidasFoiIncrementado = 1){
+                   gContadorSaidasAntecipadas--;
+                 }                          
+                 nHorasSaidaAntecipadaNoDia = 0; 
+            }                                 
+                             
+            @ ------ Cálculo dos minutos para a compensação, caso houver atraso. ------ @       
+            se((nMarcacaoCompensacao > 0) e (nHorasAtrasoNoDia > 0) e (nPrimeiraMarcacaoEntradaValida > 0)){
+                 nHorasExtrasNoDia = nMarcacaoCompensacao - nHoraSaida;
+                 se (nHorasExtrasNoDia > nCompensacaoMaxima){ 
+                       nHorasExtrasNoDia = nCompensacaoMaxima; @ Horas compensadas não podem passar de 30 minutos (nCompensacaoMaxima) @
+                 }
+                 se (nHorasExtrasNoDia > nHorasAtrasoNoDia){
+                       nHorasExtrasNoDia = nHorasAtrasoNoDia; @ Só pode compensar no máximo todo o atraso do dia @
+                 }
+                 Se((nContadorAtrasosFoiIncrementado = 1) e ((nHorasAtrasoNoDia - nHorasExtrasNoDia) = 0)){
+                       gContadorAtrasos--; 
+                 }
+            }   
+        
+        }   
+        
+        @ ----------------------- Horários de 24h ---------------------------------------@
+
+        Se((nPrimeiroDiaHorario24h = 1) ou (nSegundoDiaHorario24h = 1)){
+             nHorasAtrasoNoDia = 0;
+             nHorasSaidaAntecipadaNoDia = 0;
+        }  
+        
+        @ Calcula o atraso. @
+        Se((nPrimeiroDiaHorario24h = 1) e (nPrimeiraMarcacaoEntradaValida24h <> 0) e (nPrimeiraMarcacaoEntradaValida24h > (nHoraEntrada + nToleranciaAtraso))){ 
+             nHorasAtrasoNoDia =  nPrimeiraMarcacaoEntradaValida24h - nHoraEntrada;               
+        }
+        
+        @ Calcula a saída antecipada. @
+        Se((nSegundoDiaHorario24h = 1) e (nUltimaMarcacaoSaidaValida24h <> 0) e (nUltimaMarcacaoSaidaValida24h < nHoraSaidaToleranciaAnterior)){
+             nHorasSaidaAntecipadaNoDia = nHoraSaida - nUltimaMarcacaoSaidaValida24h;      
+        }        
+        
+        @ Quando o sistema não consegue apurar as marcações, ele registra como Marcação Inválida. @
+        @ ------------- Deve calcular atrasos e saídas antecipadas porque o sistema não consegue apurar. ------------- @
+        Se((nHouveMarcacaoInvalida > 0) e (nPrimeiroDiaHorario24h = 1)){
+                 Se(nPrimeiraMarcacaoEntradaValida24h > (nHoraEntrada + nToleranciaAtraso)){ @ nMarcacaoEntradaValida @
+                        nHorasAtrasoNoDia =  nPrimeiraMarcacaoEntradaValida24h - nHoraEntrada;               
+                  }                 
+        } 
+        Se((nHouveMarcacaoInvalida > 0) e (nSegundoDiaHorario24h = 1)){
+                  Se((nUltimaMarcacaoSaidaValida24h <> 0) e (nUltimaMarcacaoSaidaValida24h < (nHoraSaida - nToleranciaSaidaAntecipada))){                         
+                        nHorasSaidaAntecipadaNoDia =  nHoraSaida - nUltimaMarcacaoSaidaValida24h;                    
+                  }                    
+        } 
+ 
+        Se((nPrimeiroDiaHorario24h = 1) e (nHorasAtrasoNoDia > 0)){
+          gContadorAtrasos++;
+          nContadorAtrasosFoiIncrementado = 1;
+        }
+        
+        Se((nSegundoDiaHorario24h = 1) e (nHorasSaidaAntecipadaNoDia > 0)){
+          gContadorSaidasAntecipadas++;
+          nContadorSaidasFoiIncrementado = 1;
+        }   
+                
+        @ Trata a entrada sem registro. @
+        Se((nPrimeiroDiaHorario24h = 1) e (nPrimeiraMarcacaoEntradaValida24h = 0)){
+            nHorasAtrasoNoDia = nCargaHorariaDiaria/2;  
+            Se(nContadorAtrasosFoiIncrementado = 0){
+               gContadorAtrasos++;
+               nContadorAtrasosFoiIncrementado = 1;
+            }             
+        }
+
+        @ Trata a entrada sem registro. @
+        Se((nSegundoDiaHorario24h = 1) e (nUltimaMarcacaoSaidaValida24h = 0)){
+            nHorasSaidaAntecipadaNoDia = nCargaHorariaDiaria/2; 
+            Se(nContadorSaidasFoiIncrementado = 0){
+               gContadorSaidasAntecipadas++;
+               nContadorSaidasFoiIncrementado = 1;
+            }             
+        }         
+
+        Se((nPrimeiroDiaHorario24h = 1) e (nEntradaJustificada > 0)){
+             Se(nContadorAtrasosFoiIncrementado = 1){
+               gContadorAtrasos--;
+             }                        
+             nHorasAtrasoNoDia = 0;                  
+        }           
+        
+        Se((nSegundoDiaHorario24h = 1) e (nSaidaJustificada > 0)){
+             Se(nContadorSaidasFoiIncrementado = 1){
+               gContadorSaidasAntecipadas--;
+             }                       
+             nHorasSaidaAntecipadaNoDia = 0; 
+        }             
+        
+        @ ------ Cálculo dos minutos para a compensação, caso houver atraso. ------ @       
+        se((nMarcacaoCompensacao > 0) e (nHorasAtrasoNoDia > 0) e (nPrimeiraMarcacaoEntradaValida24h > 0)){
+            nHorasExtrasNoDia = nMarcacaoCompensacao - nHoraSaida;
+             se (nHorasExtrasNoDia > nCompensacaoMaxima){ 
+                   nHorasExtrasNoDia = nCompensacaoMaxima; @ Horas compensadas não podem passar de 30 minutos (nCompensacaoMaxima) @
+             }
+             se (nHorasExtrasNoDia > nHorasAtrasoNoDia){
+                   nHorasExtrasNoDia = nHorasAtrasoNoDia; @ Só pode compensar no máximo todo o atraso do dia @
+             }
+             Se((nContadorAtrasosFoiIncrementado = 1) e ((nHorasAtrasoNoDia - nHorasExtrasNoDia) = 0)){
+                       gContadorAtrasos--; 
+             }             
+             @nHorasAtrasoNoDia = nHorasAtrasoNoDia - nHorasExtrasNoDia;@ 
+             @AlteraControle("DescFaltaCalculada","Descrição","Atraso compensado");@  
+        }  
+                                             
+        @ Libera variáveis 24h. @
+        Se (nSegundoDiaHorario24h = 1){
+            nPrimeiraMarcacaoEntradaValida24h = 0;
+            nUltimaMarcacaoSaidaValida24h = 0;
+            nPrimeiroDiaHorario24h = 0;
+            nSegundoDiaHorario24h = 0;
+            nEhHorario24h = 0;
+        }          
+        
+        
+        nHorasTrabalhadasNoDia =  nCargaHorariaDiaria - nHorasSaidaAntecipadaNoDia - (nHorasAtrasoNoDia - nHorasExtrasNoDia);   
+                    
+}@ Deve calcular. @

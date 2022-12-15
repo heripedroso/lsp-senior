@@ -1,0 +1,103 @@
+@ --------------------------- MANUTENÇÕES - Procura por situações no Histórico de Afastamento --------------------------- @
+Definir Cursor cCUR;
+Definir Numero nPlanFeitoParaOutroFuncion; nPlanFeitoParaOutroFuncion = 0;
+Definir Numero nPlanFeitoPorOutroFuncion; nPlanFeitoPorOutroFuncion = 0;
+Definir Numero nManutencaoREP; nManutencaoREP = 0;
+Definir Numero nManutencaoNormal; nManutencaoNormal = 0;
+Definir Numero nEntradaJustificada; nEntradaJustificada = 0;
+Definir Numero nSaidaJustificada; nSaidaJustificada = 0;
+Definir Numero nRetiraFalta; nRetiraFalta = 0;
+Definir Numero nEntradasSaidasJustificadas; nEntradasSaidasJustificadas = 0;
+
+Definir Alfa aManutencaoREPDescricao; aManutencaoREPDescricao = "";
+Definir Alfa aManutencaoREPObservacao; aManutencaoREPObservacao = "";
+
+Definir Alfa aPlanFeitoParaOutroDescricao; aPlanFeitoParaOutroDescricao = "";
+Definir Alfa aPlanFeitoParaOutroObservacao; aPlanFeitoParaOutroObservacao = "";
+
+Definir Alfa aPlanFeitoPorOutroDescricao; aPlanFeitoPorOutroDescricao = "";
+Definir Alfa aPlanFeitoPorOutroObservacao; aPlanFeitoPorOutroObservacao = "";
+
+Definir Alfa aManutencaoNormalDescricao; aManutencaoNormalDescricao = "";
+Definir Alfa aManutencaoNormalObservacao; aManutencaoNormalObservacao = "";
+
+@ Às vezes o Sênior não consegue calcular corretamente os atrasos e saídas antecipadas, seja por causa das marcações ou dos horários.@
+@ Como há muitas situações em que os atrasos/saídas podem ocorrer mais de 01 vez, há o risco de incrementar indevidadmente um contador na mesma iteração. @
+@ Então as variáveis boleanas abaixo servem para saber se os atrasos/saídas antecipadas já foram incrementadas. @
+@ As variáveis abaixo certificam que os contadores são incrementados apenas uma vez na iteração.@
+Definir Numero nContadorAtrasosFoiIncrementado; nContadorAtrasosFoiIncrementado = 0;
+Definir Numero nContadorSaidasFoiIncrementado; nContadorSaidasFoiIncrementado = 0;
+Definir Numero nContadorFaltasFoiIncrementado; nContadorFaltasFoiIncrementado = 0;
+
+
+cCUR.SQL "select      \
+      r010sit.codsit, \
+      r010sit.dessit, \
+      r010sit.desabr, \  
+      r038afa.obsafa, \
+      r038afa.datAfa, \
+      r010sit.tipSit  \
+from                  \
+      r038afa,r010sit \
+where                 \
+      r038afa.sitAfa=r010sit.codSit \ 
+      and r038afa.numEmp=:xNumemp \
+      and r038afa.tipCol=:xTipCol \
+      and r038afa.numCad=:xNumCad \
+      and r010sit.usu_ImpPon IN (2,4) \
+      and ((r038afa.datTer <> :dDatZER and not (r038afa.datAfa > :dDatRef or r038afa.datTer < :dDatRef)) or (r038afa.datTer = :dDatZer and :dDatRef >= r038afa.datAfa)) \
+order by r038afa.datAfa asc";
+
+cCUR.abrirCursor(); 
+Enquanto (cCUR.achou){ 
+    
+    se(cCUR.codsit = 329){  @ REP em manutenção @
+          nManutencaoREP = 1;
+          aManutencaoREPDescricao = cCUR.dessit;
+          aManutencaoREPObservacao = cCUR.obsafa;    
+          nRetiraFalta = 1; @ Caso houver. @
+    }
+    
+    se(cCUR.codsit = 29){  @ Troca de plantões @
+          nPlanFeitoParaOutroFuncion = 1;
+          aPlanFeitoParaOutroDescricao = cCUR.dessit;
+          aPlanFeitoParaOutroObservacao = cCUR.obsafa;   
+          nRetiraFalta = 1; @ Caso houver. @   
+    }
+    
+    se(cCUR.codsit = 316){  @ Troca de plantões @
+          nPlanFeitoPorOutroFuncion = 1;
+          aPlanFeitoPorOutroDescricao = cCUR.dessit;
+          aPlanFeitoPorOutroObservacao = cCUR.obsafa;  
+          nRetiraFalta = 1; @ Caso houver. @    
+    }
+    
+    se(cCUR.codsit = 312){ @ Se a entrada foi justificada @
+          nEntradaJustificada = 1; 
+          nEntradasSaidasJustificadas = 1;            
+    } 
+    
+    se((cCUR.codsit = 311) ou (cCUR.codsit = 326)){ @ Se há justificativa de saída (311). Obs. A lavagem de sala (326) funciona como justificativa de saída. @
+          nSaidaJustificada = 1; 
+          nEntradasSaidasJustificadas = 1;            
+    }     
+    @ Manutenção do normal. Às vezes há mais de 01 manutenção no mesmo dia. Nesses casos, concatena as descrições e observações. @    
+    se((cCUR.codsit <> 329) e (cCUR.codsit <> 29) e (cCUR.codsit <> 316)){ 
+          Se(nManutencaoNormal = 0){
+              aManutencaoNormalDescricao = cCUR.dessit;
+              aManutencaoNormalObservacao = cCUR.obsafa;
+              nManutencaoNormal = 1;          
+          }
+          senao @ Se houver mais de uma manutenção no mesmo dia, concatena as descrições e observações. @
+          {   
+              concatena(aManutencaoNormalDescricao,", ",cCUR.dessit,aManutencaoNormalDescricao);
+              concatena(aManutencaoNormalObservacao,", ",cCUR.obsafa,aManutencaoNormalObservacao);
+          }
+          Se((cCUR.codsit <> 312) e (cCUR.codsit <> 311) e (cCUR.codsit <> 326)){
+             nRetiraFalta = 1; @ Caso houver. @
+          }   
+    }         
+       
+    cCUR.proximo();    
+}    
+cCUR.fecharCursor();  

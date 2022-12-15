@@ -1,0 +1,149 @@
+/* -------------------------------------------------------------------------- */
+
+@ Desenvolvido por Heriberto Pedroso @
+@ Em 15/12/2022 @
+@ Regra principal - cálculo de atrasos, saídas antecipadas, compensação, etc. @
+
+@ --- Variáveis globais (Contadores) --- @
+@ gContadorAtrasos @
+@ gContadorSaídasAntecipadas @
+@ gContadorFaltas @
+
+
+@ ----------------------- Variáveis para filtro nos cursores -----------------------------@
+xNumemp = R034FUN.NumEmp;                                                                     
+xTipCol = R034FUN.TipCol;
+xNumCad = R034FUN.NumCad;
+Definir Data dDatRef;     dDatRef = DatPro;
+Definir Data dDatZER;     MontaData(31,12,1900,dDatZER);
+
+
+@ ----------------------- Retorna os horário de entrada e saída -----------------------------@
+@ Retorna também as tolerâncias antes e depois para a entrada/saída. @
+@ A função RetornaBatidaHOrario é bastante útil, no entanto só está disponível no módulo de Controle de Ponto e Refeitório. @
+RetornaBatidaHorario (CodHog, 1, nUsoMar, nHorMar, nTolAnt2, nTolApo2, FaiMov);
+RetornaBatidaHorario (CodHog, 2, nUsoMar, nHorMar, nTolAnt2, nTolApo2, FaiMov);
+
+
+@ --------------------------- Cálculo da carga horária diária  -------------------------- @
+@ --------------------------- Recupera valores de tolerâncias  -------------------------- @
+@ ----------------------- De acordo com as configurações do horario  -------------------- @
+@                                                                                         @ 
+@                   Hora entrada                            Hora saída                    @
+@  Tempo > -----*---X----*------------------------------*---X----*------ >                @
+@               |         entrada tolerância DEPOIS     |         saída tolerância DEPOIS @
+@               entrada tolerância ANTES                saída tolerância ANTES            @
+@                                                                                         @
+
+Definir Cursor cCargaHorariaDiaria;
+Definir Numero nCargaHorariaDiaria; nCargaHorariaDiaria = 0;    @ <---- Variável principal @
+Definir Numero nMetadeCargaHorariaDiaria; nMetadeCargaHorariaDiaria = 0; @ <---- Variável principal @
+Definir Numero nCargaHorariaAlmoco; nCargaHorariaAlmoco = 0;
+Definir Numero nSequenciaMarcacao; nSequenciaMarcacao = 0; 
+
+nEhHorarioNoturno = 0; @ Variável principal @
+nHoraEntradaToleranciaAntes = 0;
+nHoraSaidaToleranciaAnterior = 0;
+nHoraSaidaToleranciaApos = 0;
+nToleranciaSaidaAntecipada = 0; @ Variável principal @
+nToleranciaAtraso = 0; @ Variável principal @
+
+nHoraEntrada = 0; @ variáveis de apoio @
+nHoraSaida = 0; @ variáveis de apoio @
+nPrimeiraBatida = 0; @ variáveis de apoio @
+nSegundaBatida = 0; @ variáveis de apoio @
+nTerceiraBatida = 0; @ variáveis de apoio @
+nQuartaBatida = 0; @ variáveis de apoio @
+
+Definir Numero nCodHorario; nCodHorario = CodHog;
+
+cCargaHorariaDiaria.SQL "select R004MHR.SEQMAR, R004MHR.HORBAT, R004MHR.TOLANT, R004MHR.TOLAPO from R004MHR where R004MHR.CODHOR = :nCodHorario";
+
+cCargaHorariaDiaria.abrirCursor(); 
+Enquanto (cCargaHorariaDiaria.achou){ 
+   Se(cCargaHorariaDiaria.SEQMAR = 1){
+         nPrimeiraBatida = cCargaHorariaDiaria.HORBAT; 
+         nHoraEntrada = cCargaHorariaDiaria.HORBAT; 
+         nHoraEntradaToleranciaAntes = cCargaHorariaDiaria.TOLANT;
+         nToleranciaAtraso = cCargaHorariaDiaria.TOLAPO - cCargaHorariaDiaria.HORBAT; 
+   }
+   Se(cCargaHorariaDiaria.SEQMAR = 2){
+         nSegundaBatida = cCargaHorariaDiaria.HORBAT; 
+         nHoraSaida = cCargaHorariaDiaria.HORBAT; 
+         nHoraSaidaToleranciaApos = cCargaHorariaDiaria.TOLAPO;
+         nToleranciaSaidaAntecipada =  cCargaHorariaDiaria.HORBAT - cCargaHorariaDiaria.TOLANT;  
+         nHoraSaidaToleranciaAnterior = cCargaHorariaDiaria.TOLANT;
+         nSequenciaMarcacao = cCargaHorariaDiaria.SEQMAR;  
+   }
+   Se(cCargaHorariaDiaria.SEQMAR = 3){nTerceiraBatida = cCargaHorariaDiaria.HORBAT;}
+   Se(cCargaHorariaDiaria.SEQMAR = 4){
+         nQuartaBatida = cCargaHorariaDiaria.HORBAT; 
+         nHoraSaida = cCargaHorariaDiaria.HORBAT; 
+         nHoraSaidaToleranciaApos = cCargaHorariaDiaria.TOLAPO;
+         nToleranciaSaidaAntecipada =  cCargaHorariaDiaria.HORBAT - cCargaHorariaDiaria.TOLANT;  
+         nHoraSaidaToleranciaAnterior = cCargaHorariaDiaria.TOLANT;
+         nSequenciaMarcacao = cCargaHorariaDiaria.SEQMAR;             
+         
+   }
+   cCargaHorariaDiaria.proximo();
+}    
+cCargaHorariaDiaria.fecharCursor();  
+
+@ Se o horário possue 04 batidas @
+Se(CodHog < 996)
+inicio
+    Se(nQuartaBatida <> 0)
+    inicio
+        nCargaHorariaAlmoco = nTerceiraBatida - nSegundaBatida;
+        nCargaHorariaDiaria = nQuartaBatida - nPrimeiraBatida - nCargaHorariaAlmoco;     
+    fim;
+    Senao @ Se o horário possue 02 batidas, então não tem almoço e apenas pega a diferença da hora da saída e da entrada para ter a carga horario total. @ 
+    inicio
+        nCargaHorariaDiaria = nSegundaBatida - nPrimeiraBatida;
+        Se((nPrimeiraBatida > nSegundaBatida)) {
+           nEhHorarioNoturno = 1;
+        }
+        Se(nPrimeiraBatida = nSegundaBatida) {   @ ATENÇÃO -> O Sênior não trata os horários de 24 horas. @
+           nEhHorario24h = 1;
+           nCargaHorariaDiaria = 24*60;
+           nEhHorarioNoturno = 2; @ Seta um valor inválido. @       
+        }
+        Se(nEhHorarioNoturno = 1){ @ Horário noturno. Por exemplo: 19:00 - 07:00. @
+            nCargaHorariaDiaria = (24*60 - nPrimeiraBatida) + nSegundaBatida;
+        }
+    fim;  
+fim;
+nMetadeCargaHorariaDiaria = nCargaHorariaDiaria/2;
+
+
+
+
+@ -------------- Faz um pré tratamento dos horários. -------------- @
+@ É necessário saber se a batida é de entrada ou saída. Para isto, @       
+@ devemos encontrar qual horas corresponde à metade da carga horária diária. @
+@ Para os horários noturnos e de 24h, a metada é definida pelo 1º e 2º dia.@
+
+nHoraMetadeDoPeriodo = nHoraEntrada + ((nHoraSaida-nHoraEntrada)/2);  @ Para ajudar na definição se a batida é na primeira metade ou na segunda metade do horário. @
+        
+Se(nEhHorarioNoturno = 1){ @ Horário noturno. Por exemplo: 19:00 - 07:00. @
+    nHoraMetadeDoPeriodo = 0; @ Para fins de cálculo, a metade do período é à meia noite. @             
+}
+        
+Se(nEhHorario24h = 1){ @ Horário de 24 horas. @
+    Se((CodHog < 996) e (HorDSe > 995)){ nHorarioDiaSeguinte = HorDSe;} @ O próximo dia, mesmo sendo FOLGA/FERIADO/DSR, ainda deve fazer parte dos cálculos. @
+}
+    
+@ Trata os horários de 24 horas. Devemos saber se estamos apurando o 1º dia ou o 2º dia. @    
+@ O Sênior não consegue tratar horários de 24 horas, logo devemos saber se estamos no primeiro ou no segundo dia da apuração. @    
+nPrimeiroDiaHorario24h = 0;
+Se((nEhHorario24h = 1) e (CodHog < 996)){
+    nPrimeiroDiaHorario24h = 1;   
+    nCodHorario24h = CodHog; 
+} 
+nSegundoDiaHorario24h = 0;
+Se((CodHog > 995) e (CodHog = nHorarioDiaSeguinte)){
+    nHorarioDiaSeguinte = 0;
+    nSegundoDiaHorario24h = 1;
+    nCargaHorariaDiaria = 24*60;
+    nEhHorarioNoturno = 2; @ Seta um valor inválido. @      
+}
