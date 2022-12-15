@@ -17,4 +17,8 @@ Para o cálculos de carga horária não encontrei função nativa com esse retor
 
 ## Problemática 03
 
-É necessário saber se a batida está na 1ª metade ou na 2ª metade do horário. Para os horários diurnos utilizei (saída-entrada)/2. No entando, para os horários noturnos e de 24h, por conversão e conveniência, utilizei a virada do dia (00:00).
+É necessário saber se a batida está na 1ª metade ou na 2ª metade do horário. Para os horários diurnos utilizei (saída-entrada)/2 como hora que delimita a metade de uma carga horária cumprida. No entando, para os horários noturnos e de 24h, por conversão e conveniência, utilizei a virada do dia (00:00).
+
+### Exemplo 01: Se você tem o horário 07:00-13:00 e registra apenas um ponto em antes das 10:00. Este marcação é considerada apenas para a entrada.
+
+### Exemplo 02: Se você tem um horário noturno, todos os pontos registrados antes da meia-noite são consideradas marcações de entrada. Logo, todos os pontos registrados no dia seguinte são considerados marcações de saída.
