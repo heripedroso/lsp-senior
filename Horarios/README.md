@@ -22,3 +22,16 @@ Para o cálculos de carga horária não encontrei função nativa com esse retor
 ### Exemplo 01: Se você tem o horário 07:00-13:00 e registra apenas um ponto em antes das 10:00. Este marcação é considerada apenas para a entrada.
 
 ### Exemplo 02: Se você tem um horário noturno, todos os pontos registrados antes da meia-noite são consideradas marcações de entrada. Logo, todos os pontos registrados no dia seguinte são considerados marcações de saída.
+
+## Linha do tempo
+
+
+@ ---------------------------------------- Cálculo da carga horária diária  -------------------------------- @
+@ ---------------------------------------- Recupera valores de tolerâncias  -------------------------------- @
+@ ------------------------------------ De acordo com as configurações do horario  -------------------------- @
+@                                                                                                            @ 
+@                                                                                                            @ 
+@                   Hora entrada                     METADE                    Hora saída                    @
+@  Tempo > -----*---X----*-----------------------------||------------------*---X----*------ >                @
+@               |         entrada tolerância DEPOIS                        |         saída tolerância DEPOIS @
+@               entrada tolerância ANTES                                   saída tolerância ANTES            @
