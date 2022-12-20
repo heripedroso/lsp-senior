@@ -10,8 +10,12 @@ Há variáveis/funções na regra LSP que retornam algumas informações de afas
 No entanto, não temos uma situação em específico que queremos procurar. Na verdade, queremos encontrar todas as possíveis situações de afastamentos para os dias em processamento. Dessa forma, é mais intuitivo utilizar cursores para fazer a varredura na tabela de histórico.
 
 
-## Situações espceiais
+## Situações especiais
 
 Há algumas situações que são tratadas de forma específica: justificativa de entrada, justificativa de saída, REP em manutenção e troca/repasse de plantões.
 
 Estas situações especiais estão em mudanças esporadicamente, dependendo de normativas e suas interpretações.
+
+## Afastamentos no mesmo dia
+
+O sistema permite lançar afastamentos no mesmo dia, desde que não se sobreponham levando em consideração a hora início e fim.
