@@ -20,7 +20,8 @@ Os horários noturnos possuem marcações em 02 dias, sendo que no 1º dia está
 @ HorApg[1] -> primeira marcação @
 @ HorApg[2] -> segunda marcação @
 
-HorApg[1] ocorre em DatPro @ Hoje @
-HorApg[2] ocorre em (DatPro +1) @ Amanhã @
+@ HorApg[1] ocorre em DatPro - hoje @
+@ HorApg[2] ocorre em (DatPro +1) - amanhã @
 ``` 
 
+Os horários de 24h necessitam marcar o 1º e o 2º dia, já que o Sênior parece não tratar esse tipo de horário de forma nativa.
