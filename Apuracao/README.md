@@ -11,17 +11,4 @@ Alguns dos recursos de apuração do Sênior não foram utilizados, já que perc
 @nHorasSaidaAntecipadaNoDia = HorStg[101];  Sênior calcula errado. @  
 @nHouveMarcacaoInvalida = HorStg[999];@ 
 @nHorasFalta = HorStg[15];@ @ Sênior calcula as faltas em minutos. Não serve para o nosso caso. @   
-```         
-
-## Dia posterior (horário noturno e de 24 horas)
-
-Os horários noturnos possuem marcações em 02 dias, sendo que no 1º dia está a entrada e no 2º dia a saída.
 ```
-@ HorApg[1] -> primeira marcação @
-@ HorApg[2] -> segunda marcação @
-
-@ HorApg[1] ocorre em DatPro - hoje @
-@ HorApg[2] ocorre em (DatPro +1) - amanhã @
-``` 
-
-Os horários de 24h necessitam marcar o 1º e o 2º dia, já que o Sênior parece não tratar esse tipo de horário de forma nativa.
