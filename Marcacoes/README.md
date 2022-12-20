@@ -21,3 +21,10 @@ O sistema sênior calcula a falta em horas, o que é completamente fora do conte
 ## Marcações do 2º vínculo
 
 Profissionais da saúde e do magistério são permitidos possuir mais de um vínculo. Dessa forma, há profissionais que possuem 02 jornadas em períodos distintos. O sistema Sênior apura somente o 1º vínculo. O problema encontra-se no 2º vínculo no qual não há registro de nenhuma marcação. Para contornar esta situação, utiliza-se uma função nativa que lê novamente os pontos registrados do 1º vínculo e comprada com as tolerâncias do horário do 2 º vinculo. Desta forma, todas as marcações do profissional são utilizadas no cálculo dos dois vínculos.
+
+```
+@ ------------------------------------------ Verifica 2º teto ------------------------------------------ @
+@ x2TNumCad é calculado anteriormente em seções anteriores. @ 
+@ RetornaMarcacoesOriginais(R034FUN.NumEmp, R034FUN.TipCol, R034FUN.NumCad, DatPro, DatPro); @
+@ Tipo de Retorno: DatApuOri[], NumCraOri[], DatAccOri[], HorAccOri[], SeqAccOri[], CodPltOri[], CodRlgOri[]. @    
+```
