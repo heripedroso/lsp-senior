@@ -16,6 +16,15 @@ Há algumas situações que são tratadas de forma específica: justificativa de
 
 Estas situações especiais estão em mudanças esporadicamente, dependendo de normativas e suas interpretações.
 
-## Afastamentos no mesmo dia
+## Variáveis de estado.
 
-O sistema permite lançar afastamentos no mesmo dia, desde que não se sobreponham levando em consideração a hora início e fim de cada um dos lançamentos.
+São variáveis booleanas que indicam sim ou não (0/1). Variáveis de estado determinam os caminhos do fluxo do algoritmo. Estas variáveis são utilizadas em outros trechos do código para a realização de cálculos do atraso ou da saída antecipada.
+
+```
+nManutencaoREP = 1;
+nPlanFeitoParaOutroFuncion = 1;
+nPlanFeitoPorOutroFuncion = 1;
+nEntradaJustificada = 1; 
+nSaidaJustificada = 1; 
+nManutencaoNormal = 1;
+```
