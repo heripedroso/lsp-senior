@@ -8,7 +8,7 @@ nUltimaMarcacaoSaidaValida = 0;
 nMarcacaoCompensacao = 0;     
 ```
 
-O algoritmo dá preferência para a primeira marcação que entra na tolerância da entrada. Se não houver marcação dentro da tolerância, a variáveis permanecerá zerada, indicando que não houve marcação válida. Dando preferência para a primeira marcação de entrada, marcações posteriores que configurem atraso serão desconsideradas.
+O algoritmo dá preferência para a primeira marcação que entra na tolerância da entrada. Se não houver marcação dentro da tolerância, a variável permanecerá zerada, indicando que não houve marcação válida. Dando preferência para a primeira marcação de entrada, marcações posteriores que configurem atraso serão desconsideradas.
 
 Da mesma maneira, o algoritmo dá preferência para a última marcação de saída dentro da tolerância, de forma que possa desconsiderar marcações anteriores que configurem saída antecipada.
 
