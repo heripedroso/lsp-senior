@@ -8,3 +8,10 @@ Há variáveis/funções na regra LSP que retornam algumas informações de afas
 * QtdAfs[ ] -> Entre os colchetes devemos colocar o código da situação da qual queremos obter informações.
 
 No entanto, não temos uma situação em específico que queremos procurar. Na verdade, queremos encontrar todas as possíveis situações de afastamentos para os dias em processamento. Dessa forma, é mais intuitivo utilizar cursores para fazer a varredura na tabela de histórico.
+
+
+## Situações espceiais
+
+Há algumas situações que são tratadas de forma específica: justificativa de entrada, justificativa de saída, REP em manutenção e troca/repasse de plantões.
+
+Estas situações especiais estão em mudanças esporadicamente, dependendo de normativas e suas interpretações.
