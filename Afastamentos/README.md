@@ -18,4 +18,4 @@ Estas situações especiais estão em mudanças esporadicamente, dependendo de n
 
 ## Afastamentos no mesmo dia
 
-O sistema permite lançar afastamentos no mesmo dia, desde que não se sobreponham levando em consideração a hora início e fim.
+O sistema permite lançar afastamentos no mesmo dia, desde que não se sobreponham levando em consideração a hora início e fim de cada um dos lançamentos.
