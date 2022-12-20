@@ -4,7 +4,7 @@ O algoritmo calcula os atrasos/saídas antecipadas levando em consideração se 
 
 ## Variáveis e funções nativas
 
-Alguns dos recursos de apuração do Sênior não foram utilizados, já que percebe-se que não estão no contexto da instituição. Além disso, parece calcular corretamente apenas para horários diurnos. Para os horários noturnos e de 24h os cálculos são diferentes.
+Alguns dos recursos de apuração do Sênior não foram utilizados, já que percebe-se que não estão no contexto da instituição. Além disso, parece calcular corretamente apenas para horários diurnos. Para os horários noturnos e de 24h os cálculos são diferentes e por isso não são aplicáveis.
 ```
 @nHorasTrabalhadasNoDia = HorStg[1];@ 
 @nHorasAtrasoNoDia = HorStg[103];  Sênior calcula errado. @
